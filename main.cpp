@@ -25,16 +25,17 @@ int main()
     SDL_Surface * image = IMG_Load("circle.png"); 
     SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
     
-    int ball_count=20;
+    int ball_count=100;
     Ball balls[ball_count];
     SDL_Rect destination;
 
     for (int i=0;i<ball_count;i++) {
-        balls[i].velocity={rand() % 2,rand() % 2};
+        balls[i].velocity={10-rand() % 20,10-rand() % 20};
         balls[i].position={rand() % 1920,rand() % 1080};
-        balls[i].r=100-rand() % 80;
-        destination.h = balls[i].r;
-        destination.w = balls[i].r;
+
+        balls[i].r=40-rand() % 20;
+        destination.h = balls[i].r*2;
+        destination.w = balls[i].r*2;
         destination.x = balls[i].position.x;
         destination.y = balls[i].position.y;
 
@@ -51,11 +52,11 @@ int main()
                     running=false;
                 }
                 else if (e.key.keysym.sym==SDLK_UP) {
-                    delay+=5;
+                    delay+=1;
                 }
                 else if (e.key.keysym.sym==SDLK_DOWN) {
-                    if (delay!=5){
-                        delay-=5;
+                    if (delay!=0){
+                        delay-=1;
                     }
                 }
             }
@@ -64,11 +65,11 @@ int main()
             }
         }
         for (int i=0;i<ball_count;i++) {
-            balls[i]=updatePhysics(balls[i],balls,i,ball_count);
-            destination.h = balls[i].r;
-            destination.w = balls[i].r;
-            destination.x = balls[i].position.x;
-            destination.y = balls[i].position.y;
+            updatePhysics(balls[i],balls,i,ball_count);
+            destination.h = balls[i].r*2;
+            destination.w = balls[i].r*2;
+            destination.x = balls[i].position.x-balls[i].r;
+            destination.y = balls[i].position.y-balls[i].r;
             SDL_RenderCopy(renderer, texture, NULL, &destination);
         }
         SDL_RenderPresent(renderer);

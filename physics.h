@@ -4,44 +4,72 @@
 #include <iostream>
 using namespace std;
 
-struct Vect {
-    float x;
-    float y;
+class Vect {
+    public:
+        float x;
+        float y;
+        Vect operator + (Vect a){return Vect {x+a.x,y+a.y};}
+        Vect operator - (Vect a){return Vect {x-a.x,y-a.y};}
+        Vect operator * (Vect a){return Vect {x*a.x,y*a.y};}
+        Vect operator * (float a){return Vect {x*a,y*a};}
+        Vect operator / (Vect a){return Vect {x/a.x,y/a.y};}
+        Vect operator / (float a){return Vect {x/a,y/a};}
+        void operator += (Vect a) { x += a.x;y+=a.y; }
+        void operator -= (Vect a) { x -= a.x;y-=a.y; }
+        void operator *= (Vect a) { x *= a.x;y*=a.y; }
+        void operator *= (float a) { x *= a;y*=a; }
+        void operator /= (Vect a) { x /= a.x;y/=a.y; }
+        Vect(float a,float b) {x=a;y=b;}
 };
 
 struct Ball {
-    Vect velocity = {.x=200,.y=200};
-    Vect position;
-    int w = 1;
-    int r=49/2;
+    Vect velocity = {0,0};
+    Vect position = {0,0};
+    int r;
 };
 
-Vect center = {.x=960,.y=540};
-float friction=0.99;
+float friction=0.98;
 
-Ball updatePhysics(Ball ball, Ball* balls,int index,int ball_count){
-    ball.velocity.x += 0.0001f*(center.x - ball.position.x);
-    ball.velocity.y += 0.0001f*(center.y - ball.position.y);
+float calcSpeedAxis(float v1,float v2,int m1,int m2) {
+    return ((m1*v1+m2*(2*v2-v1))/(m1+m2))*friction;
+}
 
-    bool touching = false;
+Vect calcSpeed(Ball &ball1,Ball &ball2, Vect axis) {
+    ball1.velocity.x=calcSpeedAxis(ball1.velocity.x,ball2.velocity.x,ball1.r,ball2.r);
+    ball1.velocity.y=calcSpeedAxis(ball1.velocity.y,ball2.velocity.y,ball1.r,ball2.r);
+    ball2.velocity.x=calcSpeedAxis(ball2.velocity.x,ball1.velocity.x,ball2.r,ball1.r);
+    ball2.velocity.y=calcSpeedAxis(ball2.velocity.y,ball1.velocity.y,ball2.r,ball1.r);
+}
+
+Vect center = {960,540};
+
+void updatePhysics(Ball &ball, Ball* balls,int index,int ball_count){
+    //ball.velocity += (center - ball.position)*0.0001f;
+    ball.velocity.y += 1.0101f;
+
+    ball.position+=ball.velocity;
+    ball.velocity*=0.9998;
+
     for (int i=0;i<ball_count;i++) {
         if (i==index){
             continue;
         }
-        Vect col = {.x=ball.position.x-balls[i].position.x,.y=ball.position.y-balls[i].position.y};
+        Vect col = ball.position-balls[i].position;
         float d = sqrt(pow(col.x,2)+pow(col.y,2));
         int min_dist=(ball.r+balls[i].r);
         if (d < min_dist){
-            touching = true;
-            Vect axe = {.x=col.x/d,.y=col.y/d};
-            ball.position={.x=ball.position.x+0.5*(min_dist-d)*axe.x,.y=ball.position.y+0.5*(min_dist-d)*axe.y};
-            balls[i].position={.x=balls[i].position.x-0.5*(min_dist-d)*axe.x,.y=balls[i].position.y-0.5*(min_dist-d)*axe.y};
-            Vect diff={.x=(ball.velocity.x-balls[i].velocity.x),.y=(ball.velocity.y-balls[i].velocity.y)};
-            ball.velocity={.x=ball.velocity.x-diff.x*friction,.y=ball.velocity.y-diff.y*friction};
-            balls[i].velocity={.x=balls[i].velocity.x+diff.x*friction,.y=balls[i].velocity.y+diff.y*friction};
+            Vect axis = col/d;
+            ball.position+=axis*0.5f*(min_dist-d);
+            balls[i].position-=axis*0.5f*(min_dist-d);
+            Vect diff=(ball.velocity-balls[i].velocity);
+            //ball.velocity-=diff*friction;
+            //balls[i].velocity+=diff*friction;
+            calcSpeed(ball,balls[i],axis);
         }
+    if (ball.position.x<=ball.r){ball.velocity.x=-ball.velocity.x*friction;ball.position.x=ball.r;}
+    if (ball.position.x>=1920-ball.r){ball.velocity.x=-ball.velocity.x*friction;ball.position.x=1920-ball.r;}
+    if (ball.position.y<=ball.r){ball.velocity.y=-ball.velocity.y*friction;ball.position.y=ball.r;}
+    if (ball.position.y>=1080-ball.r){ball.velocity.y=-ball.velocity.y*friction;ball.position.y=1080-ball.r;}
     }
-    ball.position={.x=ball.position.x+ball.velocity.x,.y=ball.position.y+ball.velocity.y};
-    ball.velocity={.x=ball.velocity.x*0.9999,.y=ball.velocity.y*0.9999};
-    return ball;
+    return;
 }
