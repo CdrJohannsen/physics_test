@@ -30,13 +30,12 @@ Ball updatePhysics(Ball ball, Ball* balls,int index,int ball_count){
         }
         Vect col = {.x=ball.position.x-balls[i].position.x,.y=ball.position.y-balls[i].position.y};
         float d = sqrt(pow(col.x,2)+pow(col.y,2));
-        int min_dist=ball.r+balls[i].r
-        if (d < 49){
+        int min_dist=(ball.r+balls[i].r);
+        if (d < min_dist){
             touching = true;
             Vect axe = {.x=col.x/d,.y=col.y/d};
-            ball.position={.x=ball.position.x+0.5*(49-d)*axe.x,.y=ball.position.y+0.5*(49-d)*axe.y};
-            balls[i].position={.x=balls[i].position.x-0.5*(49-d)*axe.x,.y=balls[i].position.y-0.5*(49-d)*axe.y};
-            Vect old_vel=ball.velocity;
+            ball.position={.x=ball.position.x+0.5*(min_dist-d)*axe.x,.y=ball.position.y+0.5*(min_dist-d)*axe.y};
+            balls[i].position={.x=balls[i].position.x-0.5*(min_dist-d)*axe.x,.y=balls[i].position.y-0.5*(min_dist-d)*axe.y};
             Vect diff={.x=(ball.velocity.x-balls[i].velocity.x),.y=(ball.velocity.y-balls[i].velocity.y)};
             ball.velocity={.x=ball.velocity.x-diff.x*friction,.y=ball.velocity.y-diff.y*friction};
             balls[i].velocity={.x=balls[i].velocity.x+diff.x*friction,.y=balls[i].velocity.y+diff.y*friction};

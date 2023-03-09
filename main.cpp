@@ -28,12 +28,13 @@ int main()
     int ball_count=20;
     Ball balls[ball_count];
     SDL_Rect destination;
-    destination.h = 49;
-    destination.w = 49;
 
     for (int i=0;i<ball_count;i++) {
         balls[i].velocity={rand() % 2,rand() % 2};
         balls[i].position={rand() % 1920,rand() % 1080};
+        balls[i].r=100-rand() % 80;
+        destination.h = balls[i].r;
+        destination.w = balls[i].r;
         destination.x = balls[i].position.x;
         destination.y = balls[i].position.y;
 
@@ -64,6 +65,8 @@ int main()
         }
         for (int i=0;i<ball_count;i++) {
             balls[i]=updatePhysics(balls[i],balls,i,ball_count);
+            destination.h = balls[i].r;
+            destination.w = balls[i].r;
             destination.x = balls[i].position.x;
             destination.y = balls[i].position.y;
             SDL_RenderCopy(renderer, texture, NULL, &destination);
