@@ -3,6 +3,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <stdio.h> 
 #include "physics.h"
 #include <ctime>
 #include <iostream>
@@ -29,37 +30,46 @@ int main()
     destination.h = 49;
     destination.w = 49;
 
-    for (Ball ball : balls) {
-        ball.x = rand() % 1920;
-        ball.y = rand() % 1080;
-        destination.x = ball.x;
-        destination.y = ball.y;
+    for (int i=0;i<5;i++) {
+        balls[i].velocity={rand() % 2,rand() % 2};
+        balls[i].position={rand() % 1920,rand() % 1080};
+        destination.x = balls[i].position.x;
+        destination.y = balls[i].position.y;
 
         SDL_RenderCopy(renderer, texture, NULL, &destination);
     }
     SDL_RenderPresent(renderer);
     
     bool running=true;
+    int delay=10;
     while(running){
         while(SDL_PollEvent(&e)) {
             if(e.type == SDL_KEYDOWN) {
                 if (e.key.keysym.sym==SDLK_ESCAPE) {
                     running=false;
                 }
+                else if (e.key.keysym.sym==SDLK_UP) {
+                    delay+=5;
+                }
+                else if (e.key.keysym.sym==SDLK_DOWN) {
+                    if (delay!=5){
+                        delay-=5;
+                    }
+                }
             }
             else if(e.type == SDL_QUIT) {
                 running=false;
             }
         }
-        SDL_RenderClear(renderer);
         for (int i=0;i<5;i++) {
-            balls[i]=updatePhysics(balls[i]);
-            destination.x = balls[i].x;
-            destination.y = balls[i].y;
+            balls[i]=updatePhysics(balls[i],balls,i);
+            destination.x = balls[i].position.x;
+            destination.y = balls[i].position.y;
             SDL_RenderCopy(renderer, texture, NULL, &destination);
         }
         SDL_RenderPresent(renderer);
-        SDL_Delay(100);
+        SDL_RenderClear(renderer);
+        SDL_Delay(delay);
     }
     return 0;
 }
