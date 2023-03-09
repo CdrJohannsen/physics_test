@@ -1,5 +1,4 @@
 #include <math.h>
-#include <vector>
 #include <stdio.h> 
 #include <iostream>
 using namespace std;
@@ -28,7 +27,7 @@ struct Ball {
     int r;
 };
 
-float friction=0.98;
+float friction=1.00;
 
 float calcSpeedAxis(float v1,float v2,int m1,int m2) {
     return ((m1*v1+m2*(2*v2-v1))/(m1+m2))*friction;
@@ -39,13 +38,14 @@ Vect calcSpeed(Ball &ball1,Ball &ball2, Vect axis) {
     ball1.velocity.y=calcSpeedAxis(ball1.velocity.y,ball2.velocity.y,ball1.r,ball2.r);
     ball2.velocity.x=calcSpeedAxis(ball2.velocity.x,ball1.velocity.x,ball2.r,ball1.r);
     ball2.velocity.y=calcSpeedAxis(ball2.velocity.y,ball1.velocity.y,ball2.r,ball1.r);
+    printf("1: %f 2: %f\n",ball1.velocity.x,ball2.velocity.x);
 }
 
 Vect center = {960,540};
 
 void updatePhysics(Ball &ball, Ball* balls,int index,int ball_count){
-    //ball.velocity += (center - ball.position)*0.0001f;
-    ball.velocity.y += 1.0101f;
+    ball.velocity += (center - ball.position)*0.0001f;
+    //ball.velocity.y += 1.0101f;
 
     ball.position+=ball.velocity;
     ball.velocity*=0.9998;
