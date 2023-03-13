@@ -66,8 +66,8 @@ Vect calcSpeed(Ball &ball1,Ball &ball2, Vect axis) {
 Vect center = {960,540};
 
 void updatePhysics(Ball &ball, Ball* balls,int index,int ball_count){
-    ball.velocity += (center - ball.position)*0.0001f;
-    //ball.velocity.y += 1.0101f;
+    //ball.velocity += (center - ball.position)*0.0001f;
+    ball.velocity.y += 0.5000f;
 
     ball.position+=ball.velocity;
     ball.velocity*=0.9998;
@@ -85,9 +85,12 @@ void updatePhysics(Ball &ball, Ball* balls,int index,int ball_count){
             balls[i].position-=axis*0.5f*(min_dist-d);
             axis.reverse();
             Vect diff=(ball.velocity-balls[i].velocity);
-            ball.velocity-=diff*friction*0.65;
-            balls[i].velocity+=diff*friction*0.65;
+            cout << ball.velocity;
+            //ball.velocity-=diff*friction*0.65;
+            //balls[i].velocity+=diff*friction*0.65;
             //calcSpeed(ball,balls[i],axis);
+            //ball.velocity+=axis*0.5f*(min_dist-d)*0.001;
+            //balls[i].velocity-=axis*0.5f*(min_dist-d)*0.001;
         }
     if (ball.position.x<=ball.r){ball.velocity.x=-ball.velocity.x*friction;ball.position.x=ball.r;}
     if (ball.position.x>=1920-ball.r){ball.velocity.x=-ball.velocity.x*friction;ball.position.x=1920-ball.r;}
