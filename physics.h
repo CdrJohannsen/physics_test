@@ -24,6 +24,9 @@ class Vect {
             x=y;
             y=a;
         }
+        float length() {
+            return sqrt(pow(x,2)+pow(y,2));
+        }
 };
 
 std::ostream& operator << (std::ostream& out,Vect const& a) {
@@ -53,11 +56,8 @@ Vect calcSpeed(Ball &ball1,Ball &ball2, Vect axis) {
     //ball1.velocity.x=calcSpeedAxis(ball1.velocity.y,ball2.velocity.y,ball1.r,ball2.r);
     //ball2.velocity.y=calcSpeedAxis(ball2.velocity.x,ball1.velocity.x,ball2.r,ball1.r);
     //ball2.velocity.x=calcSpeedAxis(ball2.velocity.y,ball1.velocity.y,ball2.r,ball1.r);
-    ball1.velocity.x=calcSpeedAxis(axis.x*ball1.velocity.x,axis.y*ball2.velocity.y,ball1.r,ball2.r);
-    ball1.velocity.y=calcSpeedAxis(axis.y*ball1.velocity.y,axis.x*ball2.velocity.x,ball1.r,ball2.r);
-    ball2.velocity.x=-calcSpeedAxis(axis.x*ball2.velocity.x,axis.y*ball1.velocity.y,ball2.r,ball1.r);
-    ball2.velocity.y=-calcSpeedAxis(axis.y*ball2.velocity.y,axis.x*ball1.velocity.x,ball2.r,ball1.r);
-    cout << ball1.velocity;
+    ball1.velocity=axis*-calcSpeedAxis(ball1.velocity.length(),ball2.velocity.length(),ball1.r,ball2.r);
+    ball2.velocity=axis*calcSpeedAxis(ball2.velocity.length(),ball1.velocity.length(),ball2.r,ball1.r);
     cout << ball1.velocity;
     cout << ball2.velocity;
     cout << "------------\n";
@@ -85,12 +85,9 @@ void updatePhysics(Ball &ball, Ball* balls,int index,int ball_count){
             balls[i].position-=axis*0.5f*(min_dist-d);
             axis.reverse();
             Vect diff=(ball.velocity-balls[i].velocity);
-            cout << ball.velocity;
             //ball.velocity-=diff*friction*0.65;
             //balls[i].velocity+=diff*friction*0.65;
-            //calcSpeed(ball,balls[i],axis);
-            //ball.velocity+=axis*0.5f*(min_dist-d)*0.001;
-            //balls[i].velocity-=axis*0.5f*(min_dist-d)*0.001;
+            calcSpeed(ball,balls[i],axis);
         }
     if (ball.position.x<=ball.r){ball.velocity.x=-ball.velocity.x*friction;ball.position.x=ball.r;}
     if (ball.position.x>=1920-ball.r){ball.velocity.x=-ball.velocity.x*friction;ball.position.x=1920-ball.r;}

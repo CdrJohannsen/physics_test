@@ -24,12 +24,12 @@ int main()
     SDL_Surface * image = IMG_Load("circle.png"); 
     SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
     
-    int ball_count=500;
+    int ball_count=100;
     Ball balls[ball_count];
     SDL_Rect destination;
 
     for (int i=0;i<ball_count;i++) {
-        balls[i].velocity={10-rand() % 20,10-rand() % 20};
+        //balls[i].velocity={10-rand() % 20,10-rand() % 20};
         balls[i].position={rand() % 1920,rand() % 1080};
 
         balls[i].r=30-rand() % 1;
