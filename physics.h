@@ -37,9 +37,10 @@ struct Ball {
     Vect velocity = {0,0};
     Vect position = {0,0};
     int r;
+    int w;
 };
 
-float friction=0.99;
+float friction=0.95;
 //float friction=0.25;
 
 float calcSpeedAxis(float v1,float v2,int m1,int m2) {
@@ -47,27 +48,18 @@ float calcSpeedAxis(float v1,float v2,int m1,int m2) {
 }
 
 Vect calcSpeed(Ball &ball1,Ball &ball2, Vect axis) {
-    ball1.velocity*=Vect(0,0)-axis;
-    ball2.velocity*=Vect(0,0)+axis;
-    cout << "___________\n";
-    cout << ball1.velocity;
-    cout << ball2.velocity;
-    //ball1.velocity.y=calcSpeedAxis(ball1.velocity.x,ball2.velocity.x,ball1.r,ball2.r);
-    //ball1.velocity.x=calcSpeedAxis(ball1.velocity.y,ball2.velocity.y,ball1.r,ball2.r);
-    //ball2.velocity.y=calcSpeedAxis(ball2.velocity.x,ball1.velocity.x,ball2.r,ball1.r);
-    //ball2.velocity.x=calcSpeedAxis(ball2.velocity.y,ball1.velocity.y,ball2.r,ball1.r);
-    ball1.velocity=axis*-calcSpeedAxis(ball1.velocity.length(),ball2.velocity.length(),ball1.r,ball2.r);
-    ball2.velocity=axis*calcSpeedAxis(ball2.velocity.length(),ball1.velocity.length(),ball2.r,ball1.r);
-    cout << ball1.velocity;
-    cout << ball2.velocity;
-    cout << "------------\n";
+    ball1.velocity=axis*calcSpeedAxis(ball1.velocity.length(),ball2.velocity.length(),ball1.w,ball2.w);
+    ball2.velocity=axis*-calcSpeedAxis(ball2.velocity.length(),ball1.velocity.length(),ball2.w,ball1.w);
 }
 
 Vect center = {960,540};
 
 void updatePhysics(Ball &ball, Ball* balls,int index,int ball_count){
-    //ball.velocity += (center - ball.position)*0.0001f;
-    ball.velocity.y += 0.5000f;
+    Vect vect_to_center = center-ball.position;
+    float dist_to_center = sqrt(pow(vect_to_center.x,2)+pow(vect_to_center.y,2));
+    Vect axis_to_center = vect_to_center/dist_to_center;
+    ball.velocity += axis_to_center*0.5f;
+    //ball.velocity.y += 0.5000f;
 
     ball.position+=ball.velocity;
     ball.velocity*=0.9998;
@@ -83,7 +75,6 @@ void updatePhysics(Ball &ball, Ball* balls,int index,int ball_count){
             Vect axis = col/d;
             ball.position+=axis*0.5f*(min_dist-d);
             balls[i].position-=axis*0.5f*(min_dist-d);
-            axis.reverse();
             Vect diff=(ball.velocity-balls[i].velocity);
             //ball.velocity-=diff*friction*0.65;
             //balls[i].velocity+=diff*friction*0.65;
