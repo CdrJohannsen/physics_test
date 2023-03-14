@@ -32,7 +32,8 @@ int main()
         //balls[i].velocity={10-rand() % 20,10-rand() % 20};
         balls[i].position={rand() % 1920,rand() % 1080};
 
-        balls[i].r=30-rand() % 1;
+        balls[i].r=32-rand() % 1;
+        balls[i].r=30;
         destination.h = balls[i].r*2;
         destination.w = balls[i].r*2;
         destination.x = balls[i].position.x;

@@ -39,7 +39,7 @@ struct Ball {
     int r;
 };
 
-float friction=0.95;
+float friction=0.99;
 //float friction=0.25;
 
 float calcSpeedAxis(float v1,float v2,int m1,int m2) {
