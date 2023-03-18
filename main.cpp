@@ -18,18 +18,22 @@ int main()
     IMG_Init(IMG_INIT_PNG);
     srand((unsigned)time(0));
 
+    SDL_SetHint( SDL_HINT_RENDER_SCALE_QUALITY, "1" );
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 2);
+
     SDL_SetRenderDrawColor(renderer,0,0,0,255);
     SDL_RenderClear(renderer);
     
     SDL_Surface * image = IMG_Load("circle.png"); 
     SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
     
-    int ball_count=300;
+    int ball_count=90;
     Ball balls[ball_count];
     SDL_Rect destination;
 
     for (int i=0;i<ball_count;i++) {
-        //balls[i].velocity={10-rand() % 20,10-rand() % 20};
+        balls[i].velocity={10-rand() % 20,10-rand() % 20};
         balls[i].position={rand() % 1920,rand() % 1080};
         int r = 40-rand() % 30;
         balls[i].r=r;
@@ -62,7 +66,7 @@ int main()
                 else if (e.key.keysym.sym==SDLK_r) {
                     for (int i=0;i<ball_count;i++) {
                         balls[i].position={rand() % 1920,rand() % 1080};
-                        //balls[i].velocity={10-rand() % 20,10-rand() % 20};
+                        balls[i].velocity={10-rand() % 20,10-rand() % 20};
                     }
                 }
             }
