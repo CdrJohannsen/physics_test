@@ -12,4 +12,4 @@ run:
 	./$(TARGET)
 
 clear:
-	rm $(TARGET)
+	rm -f $(TARGET)

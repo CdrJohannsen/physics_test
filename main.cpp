@@ -8,6 +8,12 @@
 #include <iostream>
 using namespace std;
 
+void spreadBall(Ball &ball){
+    ball.velocity={5-rand() % 10,5-rand() % 10};
+    ball.position={1820-rand() % 1720,980-rand() % 880};
+    
+}
+
 int main() 
 {
     SDL_Window* window = nullptr;
@@ -28,13 +34,12 @@ int main()
     SDL_Surface * image = IMG_Load("circle.png"); 
     SDL_Texture * texture = SDL_CreateTextureFromSurface(renderer, image);
     
-    int ball_count=90;
+    int ball_count=200;
     Ball balls[ball_count];
     SDL_Rect destination;
 
     for (int i=0;i<ball_count;i++) {
-        balls[i].velocity={10-rand() % 20,10-rand() % 20};
-        balls[i].position={rand() % 1920,rand() % 1080};
+        spreadBall(balls[i]);
         int r = 40-rand() % 30;
         balls[i].r=r;
         balls[i].w=r*r;
@@ -65,8 +70,7 @@ int main()
                 }
                 else if (e.key.keysym.sym==SDLK_r) {
                     for (int i=0;i<ball_count;i++) {
-                        balls[i].position={rand() % 1920,rand() % 1080};
-                        balls[i].velocity={10-rand() % 20,10-rand() % 20};
+                        spreadBall(balls[i]);
                     }
                 }
             }
