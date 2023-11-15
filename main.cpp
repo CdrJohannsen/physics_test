@@ -35,7 +35,7 @@ int main() {
   SDL_Surface* image = IMG_Load("circle.png");
   SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, image);
 
-  int ball_count = 50;
+  int ball_count = 20;
   Ball balls[ball_count];
   SDL_Rect destination;
 
