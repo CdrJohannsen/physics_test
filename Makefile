@@ -1,15 +1,16 @@
 CC = g++
 TARGET = main
+OUTPUT = physics
 LDLIBS=-lSDL2 -lSDL2_image
 CFLAGS= -w
 
-all: $(TARGET)
+all:
 	make clear
-	$(CC) -o $(TARGET) $(TARGET).cpp $(LDLIBS) $(CFLAGS)
+	$(CC) -o $(OUTPUT) $(TARGET).cpp $(LDLIBS) $(CFLAGS)
 
 run:
 	make all
-	./$(TARGET)
+	./$(OUTPUT)
 
 clear:
-	rm -f $(TARGET)
+	rm -f $(OUTPUT)
